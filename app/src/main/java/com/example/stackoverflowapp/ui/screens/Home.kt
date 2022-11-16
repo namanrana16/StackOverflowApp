@@ -111,7 +111,7 @@ fun HomeScreen() {
                     //Toast.makeText(context, "$email  +  $clickCount", Toast.LENGTH_SHORT).show()
                 }
             },
-                Modifier.size(30.dp),
+                Modifier.size(36.dp),
                 shape = MaterialTheme.shapes.medium) {
 
             }
