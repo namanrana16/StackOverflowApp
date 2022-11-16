@@ -1,5 +1,7 @@
 package com.example.stackoverflowapp.ui.screens
 
+import android.net.Uri
+import androidx.browser.customtabs.CustomTabsIntent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -11,6 +13,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.semantics.Role.Companion.Image
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -44,13 +47,14 @@ fun HomeScreen() {
 
 }
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun CharacterImageCard(items:Item) {
     val imagerPainter = rememberImagePainter(items.owner.profileImage)
-
+    val context = LocalContext.current
     Card(
         shape = MaterialTheme.shapes.medium,
-        modifier = Modifier.padding(16.dp)
+        modifier = Modifier.padding(16.dp), onClick = { CustomTabsIntent.Builder().build().launchUrl(context, Uri.parse(items.link)) }
     ) {
         Box {
 
