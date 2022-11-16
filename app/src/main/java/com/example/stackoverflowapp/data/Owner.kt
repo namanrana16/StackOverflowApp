@@ -13,7 +13,7 @@ data class Owner(
     @Json(name = "link")
     val link: String="",
     @Json(name = "profile_image")
-    val profileImage: String,
+    val profileImage: String="https://lh3.googleusercontent.com/a-/AOh14Gh4hdybGywmtC1dsHlL0CXfZ6iyxQ9kZBesUGqw=k-s128",
     @Json(name = "reputation")
     val reputation: Int=0,
     @Json(name = "user_id")
