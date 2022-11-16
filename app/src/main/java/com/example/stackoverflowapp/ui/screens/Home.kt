@@ -20,30 +20,81 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.rememberImagePainter
 import com.example.stackoverflowapp.data.Item
 import com.example.stackoverflowapp.data.StackOverflowModel
+import java.time.Instant
+import java.time.ZoneId
 
 @Composable
 fun HomeScreen() {
+
+
+    var avgViewCount :Int = 0
+    var avgAnsCount:Int = 0
+    var indices :Int = 1
+
     val homeViewModel = viewModel(modelClass = HomeViewModel::class.java)
     val state by homeViewModel.state.collectAsState()
+//
+    for (item in state){
+        avgViewCount += item.viewCount
+        avgAnsCount += item.answerCount
+        indices++
+    }
+    avgAnsCount /= indices
+    avgViewCount /= indices
 
-    LazyColumn {
-        if (state.isEmpty()) {
-            item {
-                CircularProgressIndicator(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .wrapContentSize(align = Alignment.Center)
-                )
+
+
+
+
+
+    Column(Modifier.fillMaxSize()) {
+
+        Row(modifier = Modifier
+            .fillMaxWidth()
+            .wrapContentSize(align = Alignment.TopCenter)) {
+
+            Card(
+                Modifier
+                    .wrapContentSize(Alignment.Center)
+                    .padding(10.dp)) {
+                Text(text = "Avg View count  $avgViewCount")
             }
 
+            Spacer(modifier = Modifier.width(10.dp))
+
+            Card(
+                Modifier
+                    .wrapContentSize(Alignment.Center)
+                    .padding(10.dp)) {
+                Text(text = "Avg Ans Count  $avgAnsCount")
+            }
         }
 
-        items(state) { items:Item ->
-            CharacterImageCard(items)
-        }
+        Spacer(modifier = Modifier.width(10.dp))
 
+        LazyColumn {
+            if (state.isEmpty()) {
+                item {
+                    CircularProgressIndicator(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .wrapContentSize(align = Alignment.Center)
+                    )
+                }
+
+            }
+
+            items(state) { items:Item ->
+                CharacterImageCard(items)
+
+            }
+
+
+        }
 
     }
+
+
 
 }
 
@@ -52,6 +103,14 @@ fun HomeScreen() {
 fun CharacterImageCard(items:Item) {
     val imagerPainter = rememberImagePainter(items.owner.profileImage)
     val context = LocalContext.current
+
+    val dt = Instant.ofEpochSecond(items.creationDate.toLong())
+        .atZone(ZoneId.systemDefault())
+        .toLocalDateTime()
+
+
+
+
     Card(
         shape = MaterialTheme.shapes.medium,
         modifier = Modifier.padding(16.dp), onClick = { CustomTabsIntent.Builder().build().launchUrl(context, Uri.parse(items.link)) }
@@ -77,8 +136,9 @@ fun CharacterImageCard(items:Item) {
                         .fillMaxWidth()
                         .padding(4.dp)
                 ) {
-                    Text(text = "Real name: ${items.owner.displayName}")
-                    Text(text = "Actor name: ${items.title}")
+                    Text(text = "Username: ${items.owner.displayName}")
+                    Text(text = "Question: ${items.title}", maxLines = 3)
+                    Text(text = "Date: $dt")
                 }
             }
 
